@@ -1,14 +1,21 @@
 var express = require('express');
 var app = express();
 
-//  HTTP method나 route에 상관없이 서버에 요청이 올 때마다 무조건 콜백함수가 실행됨
-app.use(express.static(__dirname + '/public')); // __dirname은 node.js에서 프로그램이 실행중인 파일의 위치를 나타내는 global variable
-// '현재_위치/public' route를 static폴더로 지정하라는 명령어
-// 즉 '/'에 접속하면 '현재_위치/public'를, '/css'에 접속하면 '현재_위치/public/css'를 연결해줌
-// static route에 접근할 때, 특별히 파일 이름을 지정해 주지 않으면 자동으로 index.html 파일을 찾게 됩니다.
-// 즉 '/'에 접속하면 '현재_위치/pulbic/index.html' 파일을 연결하게 됩니다.
+// ejs를 사용하기 위해 express의 view engine에 ejs를 set
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/public'));
 
-var port = 3000;
-app.listen(port, function() {
-    console.log('SERVER ON! http://localhost:'+port);
+// query를 통해서 이름을 받음 (모든 query들은 req.query에 저장됨)
+app.get("/hello", function(req, res) {
+    res.render("hello", {name:req.query.nameQuery});    // 첫번째 parameter로 ejs의 이름을 전달
+    // res.render 함수는 ejs를 /views 폴더에서 찾으므로 views폴더의 이름은 변경되면 안됨!!!
+});
+
+// route parameter를 통해 이름을 받음
+app.get("/hello/:nameParam", function(req, res) {   // 콜론(:)으로 시작되는 route는 해당부분의 텍스트가 req.params에 저장됨
+    res.render("hello", {name:req.params.nameParam});   // 두번째 parameter로 ejs에서 사용될 Object를 전달
+});
+
+app.listen(3000, function() {
+    console.log('SERVER ON!');
 });
