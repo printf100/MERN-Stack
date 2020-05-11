@@ -1,1 +1,3 @@
-# MEAN-Stack 시작
+# MERN-Stack
+
+### MongoDB + Express + React + Nodejs
